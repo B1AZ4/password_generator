@@ -4,7 +4,7 @@
 Смоликов Роман
 МК-101
 */
-#include "pwdgen.h"
+#include "password_generator.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
