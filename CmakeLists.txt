@@ -10,3 +10,4 @@ add_library(password_generator_lib lib/password_generator.c lib/password_generat
 add_executable(generate app/main.c)
 target_link_libraries(generate password_generator_lib)
 target_include_directories(generate PRIVATE lib)
+add_dependencies(generate password_generator_lib)
