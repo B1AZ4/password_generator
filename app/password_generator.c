@@ -68,5 +68,24 @@ bool parse_arguments(int argc, char* argv[], Config* config) {
             }
         }
     }
-    return true;
+    for (int i = 1; i < argc; i++) {
+        char* arg = argv[i];
+        if (strncmp(arg, "-d", 2) == 0 || strncmp(arg, "-D", 2) == 0) {
+            if (strlen(arg) == 2) i++;
+            continue;
+        }
+
+        char* opt = NULL;
+        char* val = NULL;
+        int opt_len = 0;
+
+        if (strncmp(arg, "-minl", 5) == 0) { opt = "-minl"; opt_len = 5; }
+        else if (strncmp(arg, "-maxl", 5) == 0) { opt = "-maxl"; opt_len = 5; }
+        else if (strncmp(arg, "-n", 2) == 0) { opt = "-n"; opt_len = 2; }
+        else if (strncmp(arg, "-c", 2) == 0) { opt = "-c"; opt_len = 2; }
+        else if (strncmp(arg, "-a", 2) == 0) { opt = "-a"; opt_len = 2; }
+        else if (strncmp(arg, "-C", 2) == 0) { opt = "-C"; opt_len = 2; }
+        else {
+            continue;
+        }
 }
