@@ -142,4 +142,26 @@ bool parse_arguments(int argc, char* argv[], Config* config) {
             strcpy(config->charset_flags, val); config->has_C = true;
         }
     }
+    if (config->has_minl != config->has_maxl) {
+        fprintf(stderr, "Ошибка: Опции -minl и -maxl должны быть указаны только вместе\n");
+        return false;
+    }
+    if (config->has_n && (config->has_minl || config->has_maxl)) {
+        fprintf(stderr, "Ошибка: Опции -n и -minl/-maxl несовместимы\n");
+        return false;
+    }
+    if (config->has_a && config->has_C) {
+        fprintf(stderr, "Ошибка: Опции -a и -C несовместимы\n");
+        return false;
+    }
+    if (config->has_minl && config->minl > config->maxl) {
+        fprintf(stderr, "Ошибка: Минимальная длина (-minl) не может быть больше максимальной (-maxl)\n");
+        return false;
+    }
+    if (!config->has_n && !config->has_minl) {
+        config->length = 8;
+        config->has_n = true;
+    }
+
+    return true;
 }
