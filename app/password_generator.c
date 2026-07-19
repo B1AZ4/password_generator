@@ -88,4 +88,58 @@ bool parse_arguments(int argc, char* argv[], Config* config) {
         else {
             continue;
         }
+        if (strlen(arg) > opt_len) {
+            if (is_delimiter(arg[opt_len], delims)) {
+                val = arg + opt_len + 1; //-minl=10
+            }
+            else {
+                val = arg + opt_len;     //-minl10
+            }
+        }
+        else if (i + 1 < argc) {
+            val = argv[++i];             //-minl 10
+        }
+
+        if (val == NULL || strlen(val) == 0) {
+            fprintf(stderr, "Ошибка: Отсутствует значение для опции %s\n", opt);
+            return false;
+        }
+
+        // Проверка
+        if (strcmp(opt, "-minl") == 0) {
+            if (config->has_minl) { fprintf(stderr, "Ошибка: Повторяющаяся опция -minl\n"); return false; }
+            if (!is_numeric(val)) { fprintf(stderr, "Ошибка: Значение -minl должно быть числом\n"); return false; }
+            config->minl = atoi(val); config->has_minl = true;
+        }
+        else if (strcmp(opt, "-maxl") == 0) {
+            if (config->has_maxl) { fprintf(stderr, "Ошибка: Повторяющаяся опция -maxl\n"); return false; }
+            if (!is_numeric(val)) { fprintf(stderr, "Ошибка: Значение -maxl должно быть числом\n"); return false; }
+            config->maxl = atoi(val); config->has_maxl = true;
+        }
+        else if (strcmp(opt, "-n") == 0) {
+            if (config->has_n) { fprintf(stderr, "Ошибка: Повторяющаяся опция -n\n"); return false; }
+            if (!is_numeric(val)) { fprintf(stderr, "Ошибка: Значение -n должно быть числом\n"); return false; }
+            config->length = atoi(val); config->has_n = true;
+        }
+        else if (strcmp(opt, "-c") == 0) {
+            if (config->has_c) { fprintf(stderr, "Ошибка: Повторяющаяся опция -c\n"); return false; }
+            if (!is_numeric(val)) { fprintf(stderr, "Ошибка: Значение -c должно быть числом\n"); return false; }
+            config->count = atoi(val); config->has_c = true;
+        }
+        else if (strcmp(opt, "-a") == 0) {
+            if (config->has_a) { fprintf(stderr, "Ошибка: Повторяющаяся опция -a\n"); return false; }
+            strcpy(config->alphabet, val); config->has_a = true;
+        }
+        else if (strcmp(opt, "-C") == 0) {
+            if (config->has_C) { fprintf(stderr, "Ошибка: Повторяющаяся опция -C\n"); return false; }
+            //Флаги {a, A, D, S}
+            for (int k = 0; val[k] != '\0'; k++) {
+                if (val[k] != 'a' && val[k] != 'A' && val[k] != 'D' && val[k] != 'S') {
+                    fprintf(stderr, "Ошибка: Недопустимый символ '%c' в наборе -C\n", val[k]);
+                    return false;
+                }
+            }
+            strcpy(config->charset_flags, val); config->has_C = true;
+        }
+    }
 }
