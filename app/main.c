@@ -7,11 +7,17 @@ main.c - основная программа
 #include "password_generator.h"
 #include <stdio.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#pragma comment(lib, "kernel32.lib")
+#endif
+
 int main(int argc, char* argv[]) {
-    #ifdef _WIN32
-        SetConsoleCP(65001);
-        SetConsoleOutputCP(65001);
-    #endif
+#ifdef _WIN32
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+#endif
+
     Config config;
     if (!parse_arguments(argc, argv, &config)) {
         return 1;
