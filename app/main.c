@@ -8,6 +8,10 @@ main.c - основная программа
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {
+    #ifdef _WIN32
+        SetConsoleCP(65001);
+        SetConsoleOutputCP(65001);
+    #endif
     Config config;
     if (!parse_arguments(argc, argv, &config)) {
         return 1;
