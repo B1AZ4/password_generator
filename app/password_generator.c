@@ -165,3 +165,43 @@ bool parse_arguments(int argc, char* argv[], Config* config) {
 
     return true;
 }
+void generate_passwords(const Config* config) {
+    char symbols[MAX_ALPHABET] = "";
+
+    if (config->has_a) {
+        strcpy(symbols, config->alphabet);
+    }
+    else {
+        if (!config->has_C) {
+            strcat(symbols, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+        }
+        else {
+            if (strchr(config->charset_flags, 'a')) strcat(symbols, "abcdefghijklmnopqrstuvwxyz");
+            if (strchr(config->charset_flags, 'A')) strcat(symbols, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            if (strchr(config->charset_flags, 'D')) strcat(symbols, "0123456789");
+            if (strchr(config->charset_flags, 'S')) strcat(symbols, "!@#$%^&*()-_=+[{]};:',<.>/?");
+        }
+    }
+
+    int alphabet_len = strlen(symbols);
+    if (alphabet_len == 0) {
+        fprintf(stderr, "Ошибка: Итоговый алфавит для генерации пуст\n");
+        return;
+    }
+
+    srand((unsigned int)time(NULL));
+
+    for (int i = 0; i < config->count; i++) {
+        int len = config->length;
+
+        if (config->has_minl) {
+            len = config->minl + rand() % (config->maxl - config->minl + 1);
+        }
+
+        for (int j = 0; j < len; j++) {
+            int random_index = rand() % alphabet_len;
+            putchar(symbols[random_index]);
+        }
+        putchar('\n');
+    }
+}
